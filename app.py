@@ -36,9 +36,13 @@ st.markdown("""
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     * { font-family: 'Pretendard', sans-serif !important; }
     
+    /* --- 추가된 부분: Streamlit 기본 UI 요소 완벽 숨기기 --- */
+    header {visibility: hidden !important;} /* 우측 상단 햄버거 메뉴 및 헤더 바 숨김 */
+    footer {visibility: hidden !important;} /* 하단 Made with Streamlit 숨김 */
+    [data-testid="stToolbar"] {visibility: hidden !important;} /* 추가적인 툴바 요소 숨김 */
+    
     .stApp { background-color: #f8f9fa; }
     .result-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto; }
-    /* 모바일 반응형을 위해 width: 350px를 max-width: 350px로 변경했습니다. */
     .pos-box { padding: 10px 20px; border-radius: 8px; margin-bottom: 8px; color: white; font-weight: bold; border-left: 8px solid; width: 100%; max-width: 350px; text-align: left; }
     .win-loss { font-size: 4rem; font-weight: 800; text-align: center; margin-top: 20px; }
     .info-box { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 25px 35px; border-radius: 12px; display: inline-block; text-align: left; margin-top: 20px; color: #495057; font-size: 1.1rem; line-height: 1.8; }
@@ -143,7 +147,6 @@ else:
         else:
             title_text = "Tanking"
             
-        # 결과 화면 타이틀 텍스트에도 모바일 반응형 clamp()를 적용해두었습니다.
         st.markdown(f"<h1 style='text-align:center; color:{colors['dark']}; font-weight:900; font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 30px;'>{title_text}</h1>", unsafe_allow_html=True)
         
         result_html = "<div class='result-container'>"
