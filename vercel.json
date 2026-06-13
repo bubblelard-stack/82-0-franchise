@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "https://82-0-franchise-fuwnyq9yscnpxkk7gwmsn.streamlit.app/$1"
+    }
+  ]
+}
