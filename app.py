@@ -128,7 +128,7 @@ else:
         with st.spinner('Calculating...'): time.sleep(2)
         
         total_ovr = sum([s['PTS'] + (s['REB']*1.5) + (s['AST']*1.5) + (s['STL']+s['BLK'])*3 + (s['3PM']*3) - (s['TOV']*3) for s in st.session_state.roster_details.values()])
-        wins = min(82, max(0, int((total_ovr - 65) / 1.75)))
+        wins = min(82, max(0, int((total_ovr - 60) / 1.75)))
         
         if wins == 82:
             title_text = "Congratulations!"
