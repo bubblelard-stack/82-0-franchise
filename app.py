@@ -36,10 +36,18 @@ st.markdown("""
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     * { font-family: 'Pretendard', sans-serif !important; }
     
-    /* --- 추가된 부분: Streamlit 기본 UI 요소 완벽 숨기기 --- */
-    header {visibility: hidden !important;} /* 우측 상단 햄버거 메뉴 및 헤더 바 숨김 */
-    footer {visibility: hidden !important;} /* 하단 Made with Streamlit 숨김 */
-    [data-testid="stToolbar"] {visibility: hidden !important;} /* 추가적인 툴바 요소 숨김 */
+    /* --- Streamlit 기본 UI 요소 완벽 숨기기 --- */
+    header {visibility: hidden !important;} 
+    footer {visibility: hidden !important;} 
+    [data-testid="stToolbar"] {visibility: hidden !important;} 
+    
+    /* --- 모바일 드롭다운 키보드 자동 팝업 방지 --- */
+    [data-testid="stSelectbox"] input {
+        pointer-events: none !important;
+    }
+    
+    /* --- 다크모드 충돌 방지: 위젯 라벨(Choose a player 등) 글씨색 어둡게 고정 --- */
+    div[data-testid="stSelectbox"] label p { color: #111827 !important; }
     
     .stApp { background-color: #f8f9fa; }
     .result-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto; }
@@ -130,7 +138,7 @@ else:
         with st.spinner('Calculating...'): time.sleep(2)
         
         total_ovr = sum([s['PTS'] + (s['REB']*1.5) + (s['AST']*1.5) + (s['STL']+s['BLK'])*3 + (s['3PM']*3) - (s['TOV']*3) for s in st.session_state.roster_details.values()])
-        wins = min(82, max(0, int((total_ovr - 70) / 1.75)))
+        wins = min(82, max(0, int((total_ovr - 65) / 1.75)))
         
         if wins == 82:
             title_text = "Congratulations!"
@@ -173,14 +181,15 @@ else:
         col_left, col_right = st.columns([1.5, 1])
         
         with col_right:
-            st.subheader("Roster")
+            st.markdown("<h3 style='color: #111827; padding-bottom: 0.5rem;'>Roster</h3>", unsafe_allow_html=True)
             for pos in ["PG", "SG", "SF", "PF", "C"]:
                 val = st.session_state.my_roster.get(pos, "")
                 st.markdown(f"<div class='pos-box' style='background-color: {colors['main'] if val else '#D1D5DB'}; border-left-color: {colors['dark'] if val else '#9CA3AF'}; width: 100%;'>{pos}: {val}</div>", unsafe_allow_html=True)
                 
         with col_left:
-            st.markdown(f"<div style='display: flex; align-items: center; margin-bottom: 15px;'><img src='{get_team_logo_url(st.session_state.team)}' style='width: 45px; margin-right: 15px;'><h3 style='margin: 0;'>Team: <strong>{st.session_state.team}</strong></h3></div>", unsafe_allow_html=True)
-            st.write(f"#### Season: {st.session_state.temp_season[2:]}")
+            # 팀 이름 한 줄 고정(white-space: nowrap) 및 모바일 반응형 크기(clamp) 적용
+            st.markdown(f"<div style='display: flex; align-items: center; margin-bottom: 15px;'><img src='{get_team_logo_url(st.session_state.team)}' style='width: 45px; margin-right: 15px;'><h3 style='margin: 0; color: #111827; white-space: nowrap; font-size: clamp(1.2rem, 5vw, 1.75rem);'>Team: <strong>{st.session_state.team}</strong></h3></div>", unsafe_allow_html=True)
+            st.markdown(f"<h4 style='color: #4b5563; margin-top: 0; margin-bottom: 20px;'>Season: {st.session_state.temp_season[2:]}</h4>", unsafe_allow_html=True)
             
             raw_roster = get_roster(st.session_state.team, st.session_state.temp_season)
             player_list = []
