@@ -30,7 +30,6 @@ def get_team_logo_url(team_name):
     return f"https://cdn.nba.com/logos/nba/{team_info['id']}/global/L/logo.svg"
 
 # --- 페이지 설정 ---
-# page_icon 속성을 전달해주신 이미지 파일명으로 변경했습니다.
 st.set_page_config(page_title="82-0 Franchise", page_icon="KakaoTalk_20260531_182647350.jpg", layout="wide")
 st.markdown("""
     <style>
@@ -39,7 +38,8 @@ st.markdown("""
     
     .stApp { background-color: #f8f9fa; }
     .result-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto; }
-    .pos-box { padding: 10px 20px; border-radius: 8px; margin-bottom: 8px; color: white; font-weight: bold; border-left: 8px solid; width: 350px; text-align: left; }
+    /* 모바일 반응형을 위해 width: 350px를 max-width: 350px로 변경했습니다. */
+    .pos-box { padding: 10px 20px; border-radius: 8px; margin-bottom: 8px; color: white; font-weight: bold; border-left: 8px solid; width: 100%; max-width: 350px; text-align: left; }
     .win-loss { font-size: 4rem; font-weight: 800; text-align: center; margin-top: 20px; }
     .info-box { background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 25px 35px; border-radius: 12px; display: inline-block; text-align: left; margin-top: 20px; color: #495057; font-size: 1.1rem; line-height: 1.8; }
     </style>
@@ -77,25 +77,22 @@ if 'selected_players' not in st.session_state: st.session_state.selected_players
 
 # --- 메인 로직 ---
 if not st.session_state.team:
-    # 랜덤 팀 컬러 추출 (가독성을 위해 main 컬러 목록 중에서 선택)
     random_title_color = random.choice(list(TEAM_COLORS.values()))["main"]
     
     st.markdown(f"""
         <style>
-        /* 시작 화면 전용 스타일: 버튼을 카드 안으로 시각적으로 끌어올리기 위한 CSS */
         .start-card {{
             background-color: white; 
-            padding: 50px 40px 110px 40px; /* 하단에 버튼이 들어갈 공간(110px)을 여유 있게 확보 */
+            padding: 50px 40px 110px 40px; 
             border-radius: 15px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             text-align: center; 
         }}
         .stButton {{
-            margin-top: -95px !important; /* 버튼을 위로 끌어올림 */
+            margin-top: -95px !important; 
             position: relative;
             z-index: 10;
         }}
-        /* 버튼 내 글씨체를 전체 폰트(Pretendard)와 동일하게 통일 */
         .stButton button p {{
             font-family: 'Pretendard', sans-serif !important;
             font-weight: 500 !important;
@@ -104,8 +101,8 @@ if not st.session_state.team:
         </style>
         
         <div class='start-card'>
-            <div style='font-size:4.5rem; font-weight:800; color:{random_title_color}; margin-bottom: 5px; letter-spacing: -1px;'>Can you go 82-0?</div>
-            <div style='font-size:2rem; color:#000000; font-weight:500; margin-bottom: 15px;'>With your own franchise</div>
+            <div style='font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight:800; color:{random_title_color}; margin-bottom: 5px; letter-spacing: -1px; line-height: 1.2;'>Can you go <span style="white-space: nowrap;">82-0?</span></div>
+            <div style='font-size: clamp(1.2rem, 4vw, 2rem); color:#000000; font-weight:500; margin-bottom: 15px;'>With your own franchise</div>
             <div class='info-box'>
                 <div><strong>1. 시즌 :</strong> 플레이-바이-플레이 도입 이래 97-98 ~ 25-26</div>
                 <div><strong>2. 팀 빌드 :</strong> 가드 2 - 포워드 2 - 센터 1</div>
@@ -146,7 +143,8 @@ else:
         else:
             title_text = "Tanking"
             
-        st.markdown(f"<h1 style='text-align:center; color:{colors['dark']}; font-weight:900; font-size:3.5rem; margin-bottom: 30px;'>{title_text}</h1>", unsafe_allow_html=True)
+        # 결과 화면 타이틀 텍스트에도 모바일 반응형 clamp()를 적용해두었습니다.
+        st.markdown(f"<h1 style='text-align:center; color:{colors['dark']}; font-weight:900; font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 30px;'>{title_text}</h1>", unsafe_allow_html=True)
         
         result_html = "<div class='result-container'>"
         
