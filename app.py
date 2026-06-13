@@ -30,7 +30,8 @@ def get_team_logo_url(team_name):
     return f"https://cdn.nba.com/logos/nba/{team_info['id']}/global/L/logo.svg"
 
 # --- 페이지 설정 ---
-st.set_page_config(page_title="82-0 Franchise", layout="wide")
+# page_icon 속성을 전달해주신 이미지 파일명으로 변경했습니다.
+st.set_page_config(page_title="82-0 Franchise", page_icon="KakaoTalk_20260531_182647350.jpg", layout="wide")
 st.markdown("""
     <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -128,7 +129,7 @@ else:
         with st.spinner('Calculating...'): time.sleep(2)
         
         total_ovr = sum([s['PTS'] + (s['REB']*1.5) + (s['AST']*1.5) + (s['STL']+s['BLK'])*3 + (s['3PM']*3) - (s['TOV']*3) for s in st.session_state.roster_details.values()])
-        wins = min(82, max(0, int((total_ovr - 60) / 1.75)))
+        wins = min(82, max(0, int((total_ovr - 70) / 1.75)))
         
         if wins == 82:
             title_text = "Congratulations!"
