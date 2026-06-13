@@ -36,10 +36,15 @@ st.markdown("""
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     * { font-family: 'Pretendard', sans-serif !important; }
     
-    /* --- 추가된 부분: Streamlit 기본 UI 요소 완벽 숨기기 --- */
-    header {visibility: hidden !important;} /* 우측 상단 햄버거 메뉴 및 헤더 바 숨김 */
-    footer {visibility: hidden !important;} /* 하단 Made with Streamlit 숨김 */
-    [data-testid="stToolbar"] {visibility: hidden !important;} /* 추가적인 툴바 요소 숨김 */
+    /* --- Streamlit 기본 UI 요소 완벽 숨기기 --- */
+    header {visibility: hidden !important;} 
+    footer {visibility: hidden !important;} 
+    [data-testid="stToolbar"] {visibility: hidden !important;} 
+    
+    /* --- 추가된 부분: 모바일 드롭다운 키보드 자동 팝업 방지 --- */
+    [data-testid="stSelectbox"] input {
+        pointer-events: none !important;
+    }
     
     .stApp { background-color: #f8f9fa; }
     .result-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto; }
