@@ -116,7 +116,7 @@ if not st.session_state.team:
             <div style='font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight:800; color:{random_title_color}; margin-bottom: 5px; letter-spacing: -1px; line-height: 1.2;'>Can you go <span style="white-space: nowrap;">82-0?</span></div>
             <div style='font-size: clamp(1.2rem, 4vw, 2rem); color:#000000; font-weight:500; margin-bottom: 15px;'>With your own franchise</div>
             <div class='info-box'>
-                <div><strong>1. 시즌 :</strong> 플레이-바이-플레이 도입 이래 97-98 ~ 25-26</div>
+                <div><strong>1. 시즌 :</strong> 플레이-바이-플레이<br>도입 이래 97-98~25-26</div>
                 <div><strong>2. 팀 빌드 :</strong> 가드 2 - 포워드 2 - 센터 1</div>
                 <div><strong>3. 조건 :</strong> 팀, 시즌 변경 불가</div>
             </div>
@@ -138,7 +138,7 @@ else:
         with st.spinner('Calculating...'): time.sleep(2)
         
         total_ovr = sum([s['PTS'] + (s['REB']*1.5) + (s['AST']*1.5) + (s['STL']+s['BLK'])*3 + (s['3PM']*3) - (s['TOV']*3) for s in st.session_state.roster_details.values()])
-        wins = min(82, max(0, int((total_ovr - 65) / 1.75)))
+        wins = min(82, max(0, int((total_ovr - 70) / 1.75)))
         
         if wins == 82:
             title_text = "Congratulations!"
@@ -155,9 +155,10 @@ else:
         else:
             title_text = "Tanking"
             
-        st.markdown(f"<h1 style='text-align:center; color:{colors['dark']}; font-weight:900; font-size: clamp(2.5rem, 8vw, 3.5rem); margin-bottom: 30px;'>{title_text}</h1>", unsafe_allow_html=True)
-        
         result_html = "<div class='result-container'>"
+        
+        # 타이틀 문구를 result-container 안으로 이동시켜 완벽한 중앙 정렬 보장 및 글자 크기 증가
+        result_html += f"<h1 style='text-align:center; color:{colors['dark']}; font-weight:900; font-size: clamp(3rem, 10vw, 4rem); margin-bottom: 30px; margin-top: 0;'>{title_text}</h1>"
         
         for pos in ["PG", "SG", "SF", "PF", "C"]:
             val = st.session_state.my_roster.get(pos, "")
@@ -187,7 +188,6 @@ else:
                 st.markdown(f"<div class='pos-box' style='background-color: {colors['main'] if val else '#D1D5DB'}; border-left-color: {colors['dark'] if val else '#9CA3AF'}; width: 100%;'>{pos}: {val}</div>", unsafe_allow_html=True)
                 
         with col_left:
-            # 팀 이름 한 줄 고정(white-space: nowrap) 및 모바일 반응형 크기(clamp) 적용
             st.markdown(f"<div style='display: flex; align-items: center; margin-bottom: 15px;'><img src='{get_team_logo_url(st.session_state.team)}' style='width: 45px; margin-right: 15px;'><h3 style='margin: 0; color: #111827; white-space: nowrap; font-size: clamp(1.2rem, 5vw, 1.75rem);'>Team: <strong>{st.session_state.team}</strong></h3></div>", unsafe_allow_html=True)
             st.markdown(f"<h4 style='color: #4b5563; margin-top: 0; margin-bottom: 20px;'>Season: {st.session_state.temp_season[2:]}</h4>", unsafe_allow_html=True)
             
