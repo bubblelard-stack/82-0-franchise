@@ -87,21 +87,28 @@ if 'temp_season' not in st.session_state: st.session_state.temp_season = None
 if 'roster_details' not in st.session_state: st.session_state.roster_details = {}
 if 'selected_players' not in st.session_state: st.session_state.selected_players = []
 
+# 시작 화면 타이틀 색상을 세션에 저장하여 팀 선택 시 색상이 깜빡이지 않도록 고정
+if 'title_color' not in st.session_state:
+    st.session_state.title_color = random.choice(list(TEAM_COLORS.values()))["main"]
+
 # --- 메인 로직 ---
 if not st.session_state.team:
-    random_title_color = random.choice(list(TEAM_COLORS.values()))["main"]
-    
     st.markdown(f"""
         <style>
         .start-card {{
             background-color: white; 
-            padding: 50px 40px 110px 40px; 
+            padding: 50px 40px 145px 40px; /* 드롭다운 메뉴 공간 확보를 위해 패딩 살짝 조정 */
             border-radius: 15px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             text-align: center; 
         }}
+        div[data-testid="stSelectbox"] {{
+            margin-top: -125px !important; /* 드롭다운을 카드 안으로 끌어올림 */
+            position: relative;
+            z-index: 10;
+        }}
         .stButton {{
-            margin-top: -95px !important; 
+            margin-top: 5px !important; /* Start 버튼 간격 조정 */
             position: relative;
             z-index: 10;
         }}
@@ -113,7 +120,7 @@ if not st.session_state.team:
         </style>
         
         <div class='start-card'>
-            <div style='font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight:800; color:{random_title_color}; margin-bottom: 5px; letter-spacing: -1px; line-height: 1.2;'>Can you go <span style="white-space: nowrap;">82-0?</span></div>
+            <div style='font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight:800; color:{st.session_state.title_color}; margin-bottom: 5px; letter-spacing: -1px; line-height: 1.2;'>Can you go <span style="white-space: nowrap;">82-0?</span></div>
             <div style='font-size: clamp(1.2rem, 4vw, 2rem); color:#000000; font-weight:500; margin-bottom: 15px;'>With your own franchise</div>
             <div class='info-box'>
                 <div><strong>1. 시즌 :</strong> 플레이-바이-플레이<br>도입 이래 97-98~25-26</div>
@@ -125,10 +132,22 @@ if not st.session_state.team:
     
     col1, col2, col3 = st.columns([1,1,1])
     with col2:
+        # 모든 팀 목록 불러오기 및 옵션 추가
+        team_list = sorted([t['full_name'] for t in teams.get_teams()])
+        options = ["🎲 Random Team"] + team_list
+        selected_start_team = st.selectbox("Choose a team:", options, label_visibility="collapsed")
+        
         if st.button("Start", use_container_width=True):
-            st.session_state.team = random.choice([t['full_name'] for t in teams.get_teams()])
+            if selected_start_team == "🎲 Random Team":
+                st.session_state.team = random.choice(team_list)
+            else:
+                st.session_state.team = selected_start_team
+                
             y = random.randint(1997, 2025)
             st.session_state.temp_season = f"{y}-{str(y+1)[2:]}"
+            
+            # 게임 시작 시 저장된 타이틀 컬러 초기화 (다음에 Restart할 때 새로운 색 적용되도록)
+            del st.session_state.title_color
             st.rerun()
 else:
     colors = get_team_colors(st.session_state.team)
@@ -157,7 +176,6 @@ else:
             
         result_html = "<div class='result-container'>"
         
-        # 타이틀 문구를 result-container 안으로 이동시켜 완벽한 중앙 정렬 보장 및 글자 크기 증가
         result_html += f"<h1 style='text-align:center; color:{colors['dark']}; font-weight:900; font-size: clamp(3rem, 10vw, 4rem); margin-bottom: 30px; margin-top: 0;'>{title_text}</h1>"
         
         for pos in ["PG", "SG", "SF", "PF", "C"]:
